@@ -28,6 +28,12 @@ void Camera::SendMatrixToShader(Shader& shader, const char* uniform)
 void Camera::Inputs(GLFWwindow* window, vector<vector<mat4>>& sphereModel3, vector < vector<vec3> >& colorMod)
 {
 	// Handles key inputs
+	//close the window on pressing escape
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		position += speed * orientation;
@@ -112,6 +118,7 @@ void Camera::Inputs(GLFWwindow* window, vector<vector<mat4>>& sphereModel3, vect
 		// Makes sure the next time the camera looks around it doesn't jump
 		firstClick = true;
 	}
+
 }
 
 double Camera::distance(float cx, float cy, float cz, float tx, float ty, float tz)
