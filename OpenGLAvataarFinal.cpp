@@ -18,23 +18,6 @@
 using namespace glm;
 
 
-
-// Vertices coordinates
-Vertex vertices[] =
-{ //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
-	Vertex{glm::vec3(-5.0f,  5.0f,  0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)},
-	Vertex{glm::vec3(-5.0f, -5.0f,  0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f)},
-	Vertex{glm::vec3(5.0f, -5.0f,  0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)},
-	Vertex{glm::vec3(5.0f,  5.0f,  0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)}
-};
-
-// Indices for vertices order
-GLuint indices[] =
-{
-	0, 1, 2,
-	0, 2, 3
-};
-
 Vertex lightVertices[] =
 { //     COORDINATES     //
 	Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
@@ -208,22 +191,9 @@ int main()
 			Texture("images/planksspec.png", "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
 	};
 
-	Texture texturesback[]
-	{
-			Texture("images/BackGroundFill.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-			Texture("images/BackgroundFillSpecularMap.png", "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
-	};
-
-
 	//create the shader
 	Shader shaderProgram("default.vert", "default.frag");
-	std::vector<Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
-	std::vector<GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
 	std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
-	std::vector<Texture> texBack(texturesback, texturesback + sizeof(texturesback) / sizeof(Texture));
-
-	//Mesh of Background
-	Mesh background(verts, ind, texBack);
 
 	Mesh sphere(verticesF, indicesF, tex);
 
