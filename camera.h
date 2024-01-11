@@ -37,7 +37,7 @@ public:
 	void Inputs(GLFWwindow* window, vector<vector<mat4>>& sphereModel3, vector<vector<vec3>>& colorMod);
 
 	// Adjust the speed of the camera and it's sensitivity when looking around
-	float speed = 0.000001f;
+	float speed = 0.001f;
 	float sensitivity = 100.0f;
 
 	bool firstClick = true;
