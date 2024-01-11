@@ -145,15 +145,7 @@ const unsigned int height = 800;
 int main()
 {
 
-	std::vector<vec3> Vertices;
-	std::vector<vec3> Normals;
-	std::vector<vec2> TexCoords;
 
-
-	vector<Vertex> verticesF;
-	SphereVerticeGenerate(0.1f, 12, 12, verticesF);
-
-	vector<GLuint> indicesF = IndicesGenerator(12, 12);
 
 	//Initialise GLFW
 	glfwInit();
@@ -195,6 +187,14 @@ int main()
 	Shader shaderProgram("default.vert", "default.frag");
 	std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 
+	//generate sphere vertices 
+	vector<Vertex> verticesF;
+	SphereVerticeGenerate(0.1f, 12, 12, verticesF);
+
+	//generate sphere indices
+	vector<GLuint> indicesF = IndicesGenerator(12, 12);
+
+	//generate Sphere Object
 	Mesh sphere(verticesF, indicesF, tex);
 
 	//create the light object
