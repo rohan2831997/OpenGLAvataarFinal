@@ -1,6 +1,7 @@
 #include"texture.h"
+#include "model.h"
 
-Texture::Texture(const char* filename, const char* type, GLuint slot, GLenum format, GLenum pixelGL_TEXTURE_2D)
+Texture::Texture(const char* filename, const char* type, GLuint slot)
 {
 	Texture::type = type;
 
@@ -27,12 +28,103 @@ Texture::Texture(const char* filename, const char* type, GLuint slot, GLenum for
 	// float flatcolor[]={1.0f,1.0f,1.0f,1.0f};
 	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, flatColor);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelGL_TEXTURE_2D, bytes);
+	if (numColCh == 4)
+		glTexImage2D
+		(
+			GL_TEXTURE_2D,
+			0,
+			GL_RGBA,
+			widthImg,
+			heightImg,
+			0,
+			GL_RGBA,
+			GL_UNSIGNED_BYTE,
+			bytes
+		);
+	else if (numColCh == 3)
+		glTexImage2D
+		(
+			GL_TEXTURE_2D,
+			0,
+			GL_RGBA,
+			widthImg,
+			heightImg,
+			0,
+			GL_RGB,
+			GL_UNSIGNED_BYTE,
+			bytes
+		);
+	else if (numColCh == 1)
+		glTexImage2D
+		(
+			GL_TEXTURE_2D,
+			0,
+			GL_RGBA,
+			widthImg,
+			heightImg,
+			0,
+			GL_RED,
+			GL_UNSIGNED_BYTE,
+			bytes
+		);
+	else
+		throw std::invalid_argument("Automatic Texture type recognition failed");
+
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	//unload the image
 	stbi_image_free(bytes);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+std::vector<Texture> Model::getTextures()
+{
+	std::vector<Texture> textures;
+
+	std::string fileStr = std::string(file);
+	std::string fileDirectory = fileStr.substr(0, fileStr.find_last_of('/') + 1);
+
+	// Go over all images
+	for (unsigned int i = 0; i < JSON["images"].size(); i++)
+	{
+		// uri of current texture
+		std::string texPath = JSON["images"][i]["uri"];
+
+		// Check if the texture has already been loaded
+		bool skip = false;
+		for (unsigned int j = 0; j < loadedTexName.size(); j++)
+		{
+			if (loadedTexName[j] == texPath)
+			{
+				textures.push_back(loadedTex[j]);
+				skip = true;
+				break;
+			}
+		}
+
+		// If the texture has been loaded, skip this
+		if (!skip)
+		{
+			// Load diffuse texture
+			if (texPath.find("baseColor") != std::string::npos)
+			{
+				Texture diffuse = Texture((fileDirectory + texPath).c_str(), "diffuse", loadedTex.size());
+				textures.push_back(diffuse);
+				loadedTex.push_back(diffuse);
+				loadedTexName.push_back(texPath);
+			}
+			// Load specular texture
+			else if (texPath.find("metallicRoughness") != std::string::npos)
+			{
+				Texture specular = Texture((fileDirectory + texPath).c_str(), "specular", loadedTex.size());
+				textures.push_back(specular);
+				loadedTex.push_back(specular);
+				loadedTexName.push_back(texPath);
+			}
+		}
+	}
+
+	return textures;
 }
 
 void Texture::texUnit(Shader& shader, const char* uniform, GLuint unit)

@@ -1,4 +1,5 @@
 #include<iostream>
+#include<filesystem>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include <cmath>
@@ -7,6 +8,9 @@
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 
+
+
+#include"model.h"
 #include"shaderClass.h"
 #include"VAO.h"
 #include"VBO.h"
@@ -15,6 +19,7 @@
 #include"camera.h"
 #include"mesh.h"
 
+namespace fs = std::filesystem;
 using namespace glm;
 
 
@@ -179,8 +184,8 @@ int main()
 
 	Texture textures[]
 	{
-			Texture("images/planks.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-			Texture("images/planksspec.png", "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+			Texture("images/planks.png", "diffuse", 0),
+			Texture("images/planksspec.png", "specular", 1)
 	};
 
 	//create the shader
@@ -243,6 +248,16 @@ int main()
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
+	//Load the Model
+	std::string parentDir = (fs::current_path().fs::path::parent_path()).string();
+	std::string modelPath = "/OpenGLTuts/models/bunny/scene.gltf";
+
+	// Load in a model
+	Model model((parentDir + modelPath).c_str());
+
+
+
+
 
 	//Specify the background collour
 	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -276,7 +291,7 @@ int main()
 			{
 				glUniform1f(glGetUniformLocation(shaderProgram.ID, "diffuseFactor"), 1.0f - x / 6.0f);
 				glUniform1f(glGetUniformLocation(shaderProgram.ID, "specFactor"), 1.0f - y / 6.0f);
-				sphere.Draw(shaderProgram, cam, sphereModel[x][y], colorMod[x][y]);
+				sphere.Draw(shaderProgram, cam,  colorMod[x][y], sphereModel[x][y]);
 			}
 		}
 
@@ -285,9 +300,9 @@ int main()
 		glUniform1f(glGetUniformLocation(shaderProgram.ID, "diffuseFactor"), 1.0f);
 		glUniform1f(glGetUniformLocation(shaderProgram.ID, "specFactor"), 1.0f);
 		glUniform3f(glGetUniformLocation(shaderProgram.ID, "colorMod"), 1.0f, 1.0f, 1.0f);
-
+		model.Draw(shaderProgram, cam);
 		//Draw Light Object
-		light.Draw(lightShader, cam, lightModel);
+		light.DrawLight(lightShader, cam, lightModel);
 
 		glfwSwapBuffers(window);
 		//take care of all GLFW events

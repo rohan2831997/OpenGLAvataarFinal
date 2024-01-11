@@ -122,6 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,6 +138,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,6 +153,7 @@
     <ClCompile Include="ebo.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="OpenGLAvataarFinal.cpp" />
     <ClCompile Include="shaderclass.cpp" />
     <ClCompile Include="stb.cpp" />
@@ -162,6 +165,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="model.h" />
     <ClInclude Include="shaderclass.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="vao.h" />

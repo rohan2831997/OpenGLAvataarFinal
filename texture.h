@@ -13,7 +13,7 @@ public:
 	const char* type;
 	GLuint unit;
 
-	Texture(const char* filename, const char* type, GLuint slot, GLenum format, GLenum pixelType);
+	Texture(const char* filename, const char* type, GLuint slot);
 
 	void texUnit(Shader& shader, const char* uniform, GLuint unit);
 
