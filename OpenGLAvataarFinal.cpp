@@ -268,6 +268,8 @@ int main()
 
 		//handle Uniforms
 		//Linear diffuse and specular lighting
+		//Draw spheres 36 times using the same shader object but different positions
+		//Diffuse factor(x axis) and specular factor((x axis) vary linearly along the axes
 		for (float x = 0; x < 6; x++)
 		{
 			for (float y = 0; y < 6; y++)
@@ -279,12 +281,12 @@ int main()
 		}
 
 		//to draw light object properly
+		//reset othere factors to unity 
 		glUniform1f(glGetUniformLocation(shaderProgram.ID, "diffuseFactor"), 1.0f);
 		glUniform1f(glGetUniformLocation(shaderProgram.ID, "specFactor"), 1.0f);
 		glUniform3f(glGetUniformLocation(shaderProgram.ID, "colorMod"), 1.0f, 1.0f, 1.0f);
 
-		//background.Draw(shaderProgram, cam, backModel);
-
+		//Draw Light Object
 		light.Draw(lightShader, cam, lightModel);
 
 		glfwSwapBuffers(window);
