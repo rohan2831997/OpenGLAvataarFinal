@@ -223,7 +223,7 @@ int main()
 	{
 		for (float y = 0; y < 6; y++)
 		{
-			vec3 spherePos = vec3((-1.2f + (x / 2.1f)) * scale, 0.69f - (y / 2.1f) * scale, -0.0f);
+			vec3 spherePos = vec3((-1.2f + (x / 2.1f)) * scale, (1.2f - (y / 2.1f)) * scale, -0.0f);
 			sphereModel[x][y] = translate(sphereModel[x][y], spherePos);
 		}
 	}
