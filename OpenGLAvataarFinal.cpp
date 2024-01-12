@@ -204,7 +204,7 @@ int main()
 	Mesh light(lightVerts, lightInd, tex);
 
 	//make the model matrix for light
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec4 lightColor = glm::vec4(0.85f, 0.85f, 0.85f, 1.0f);
 	vec3 lightPos = vec3(0.0f, 1.5f, 1.5f);
 	mat4 lightModel = mat4(1.0f);
 	lightModel = translate(lightModel, lightPos);
@@ -252,7 +252,7 @@ int main()
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		glClearColor(0.85f, 0.85f, 0.85f, 1.0f);
 		// Clean the back buffer and assign the new colour to it
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		cam.Inputs(window, sphereModel, colorMod);
