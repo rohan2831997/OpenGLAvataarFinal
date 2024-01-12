@@ -144,9 +144,6 @@ const unsigned int height = 800;
 
 int main()
 {
-
-
-
 	//Initialise GLFW
 	glfwInit();
 
@@ -228,11 +225,6 @@ int main()
 		}
 	}
 
-	//model for background
-	vec3 backPos = vec3(+0.0f, 0.0f, -3.0f);
-	mat4 backModel = mat4(1.0f);
-	backModel = translate(backModel, backPos);
-
 	//input the respective values of unifrom from shaders
 	lightShader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
@@ -269,13 +261,13 @@ int main()
 		//handle Uniforms
 		//Linear diffuse and specular lighting
 		//Draw spheres 36 times using the same shader object but different positions
-		//Diffuse factor(x axis) and specular factor((x axis) vary linearly along the axes
+		//Diffuse factor(x axis) and specular factor((y axis) vary linearly along the axes
 		for (float x = 0; x < 6; x++)
 		{
 			for (float y = 0; y < 6; y++)
 			{
-				glUniform1f(glGetUniformLocation(shaderProgram.ID, "diffuseFactor"), 1.0f - x / 6.0f);
-				glUniform1f(glGetUniformLocation(shaderProgram.ID, "specFactor"), 1.0f - y / 6.0f);
+				glUniform1f(glGetUniformLocation(shaderProgram.ID, "diffuseFactor"), 1.0f - x / 5.0f);
+				glUniform1f(glGetUniformLocation(shaderProgram.ID, "specFactor"), 1.0f - y / 5.0f);
 				sphere.Draw(shaderProgram, cam, sphereModel[x][y], colorMod[x][y]);
 			}
 		}
