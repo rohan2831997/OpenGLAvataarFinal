@@ -233,11 +233,6 @@ int main()
 		}
 	}
 
-	//model for background
-	vec3 backPos = vec3(+0.0f, 0.0f, -3.0f);
-	mat4 backModel = mat4(1.0f);
-	backModel = translate(backModel, backPos);
-
 	//input the respective values of unifrom from shaders
 	lightShader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
@@ -250,14 +245,10 @@ int main()
 
 	//Load the Model
 	std::string parentDir = (fs::current_path().fs::path::parent_path()).string();
-	std::string modelPath = "/OpenGLTuts/models/bunny/scene.gltf";
+	std::string modelPath = "/OpenGLTuts/models/gear/gear1.gltf";
 
 	// Load in a model
 	Model model((parentDir + modelPath).c_str());
-
-
-
-
 
 	//Specify the background collour
 	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -271,6 +262,8 @@ int main()
 
 	//Camera class
 	Camera cam(width, height, vec3(0.0f, 0.0f, 2.0f));
+
+	float x = 0.0f;
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -300,7 +293,8 @@ int main()
 		glUniform1f(glGetUniformLocation(shaderProgram.ID, "diffuseFactor"), 1.0f);
 		glUniform1f(glGetUniformLocation(shaderProgram.ID, "specFactor"), 1.0f);
 		glUniform3f(glGetUniformLocation(shaderProgram.ID, "colorMod"), 1.0f, 1.0f, 1.0f);
-		model.Draw(shaderProgram, cam);
+		x++;
+		model.scaleDraw(shaderProgram, cam, abs(0.1f*sin(0.0001f*x)));
 		//Draw Light Object
 		light.DrawLight(lightShader, cam, lightModel);
 

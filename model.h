@@ -12,6 +12,8 @@ public:
 	Model(const char* file);
 	void Draw(Shader& shader, Camera& camera);
 
+	void scaleDraw(Shader& shader, Camera& camera, GLfloat scale);
+
 private:
 	const char* file;
 	std::vector<unsigned char> data;

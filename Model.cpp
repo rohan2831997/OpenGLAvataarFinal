@@ -20,6 +20,21 @@ void Model::Draw(Shader& shader, Camera& camera)
 	}
 }
 
+void Model::scaleDraw(Shader& shader, Camera& camera, GLfloat scale)
+{
+	// Go over all meshes and draw each one
+	for (unsigned int i = 0; i < meshes.size(); i++)
+	{
+		meshes[i].Mesh::Draw(shader, camera, 
+			vec3(1.0f, 1.0f, 1.0f), 
+			matricesMeshes[i], 
+			glm::vec3(0.0f, 0.0f, 0.0f), 
+			glm::quat(1.0f, 0.0f, 0.0f, 0.0f),
+			vec3(scale));
+	}
+}
+
+
 std::vector<Vertex> Model::assembleVertices(std::vector<glm::vec3> positions, std::vector<glm::vec3> normals, std::vector<glm::vec2> texUVs)
 {
 
