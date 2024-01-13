@@ -245,6 +245,9 @@ int main()
 
 	//enable depth filter
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+	//Enable stencil test
 
 	//Camera class
 	Camera cam(width, height, vec3(0.0f, 0.0f, 2.0f));
