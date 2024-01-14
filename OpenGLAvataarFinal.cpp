@@ -88,7 +88,7 @@ void SphereVerticeGenerate(float radius, int sectorCount, int stackCount, vector
 			// vertex tex coord (s, t) range between [0, 1]
 			s = (float)j / sectorCount;
 			t = (float)i / stackCount;
-			verticesF.push_back(Vertex{ vec3(x, y, z),vec3(nx, ny, nz), glm::vec3(0.0f, 1.0f, 0.0f), vec2(s, t) });
+			verticesF.push_back(Vertex{ vec3(x, y, z),vec3(-nx, -ny, -nz), glm::vec3(0.0f, 1.0f, 0.0f), vec2(s, t) });
 		}
 	}
 };
@@ -192,6 +192,8 @@ int main()
 	Shader shaderProgram("default.vert", "default.frag");
 	std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 
+	Shader outlineShaders("outline.vert", "outline.frag");
+
 	//generate sphere vertices 
 	vector<Vertex> verticesF;
 	SphereVerticeGenerate(0.1f, 12, 12, verticesF);
@@ -260,6 +262,10 @@ int main()
 	//enable depth filter
 	glEnable(GL_DEPTH_TEST);
 
+	//enable stencil buffer
+	glEnable(GL_STENCIL_TEST);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
 	//Camera class
 	Camera cam(width, height, vec3(0.0f, 0.0f, 2.0f));
 
@@ -268,11 +274,14 @@ int main()
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
+		
+		
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		// Clean the back buffer and assign the new colour to it
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		cam.Inputs(window, sphereModel, colorMod);
 		cam.UpdateMatrix(45.0f, 0.1f, 100.0f);
+
 
 		//handle Uniforms
 		//Linear diffuse and specular lighting
@@ -293,8 +302,32 @@ int main()
 		glUniform1f(glGetUniformLocation(shaderProgram.ID, "diffuseFactor"), 1.0f);
 		glUniform1f(glGetUniformLocation(shaderProgram.ID, "specFactor"), 1.0f);
 		glUniform3f(glGetUniformLocation(shaderProgram.ID, "colorMod"), 1.0f, 1.0f, 1.0f);
+
+
+		//enable copying values to the stencil buffer
+		glStencilFunc(GL_ALWAYS, 1, 0XFF);
+		glStencilMask(0xFF);
+		
+
+		//draw the model and enable writting to the stencil buffers
 		x++;
-		model.scaleDraw(shaderProgram, cam, abs(0.1f*sin(0.0001f*x)));
+		model.scaleDraw(shaderProgram, cam, abs(0.1f*sin(0.0003f*x)));
+
+		//Now stencil buffers are well written
+		// Disable writting into them
+		glStencilFunc(GL_NOTEQUAL, 1, 0XFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+
+		//draw the model now with the new shaders
+		outlineShaders.Activate();
+		model.scaleDraw(outlineShaders, cam, abs(0.1f * sin(0.0003f * x)));
+
+		//Enable depth testing again
+		glStencilMask(0xFF);
+		glStencilFunc(GL_ALWAYS, 0, 0xFF);
+		glDisable(GL_DEPTH_TEST);
+
 		//Draw Light Object
 		light.DrawLight(lightShader, cam, lightModel);
 
