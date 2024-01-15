@@ -34,6 +34,23 @@ void Model::scaleDraw(Shader& shader, Camera& camera, GLfloat scale)
 	}
 }
 
+void Model::DrawSRT(Shader& shader, Camera& camera, 
+	GLfloat scale,
+	glm::quat rotation,
+	glm::vec3 translation)
+{
+	// Go over all meshes and draw each one
+	for (unsigned int i = 0; i < meshes.size(); i++)
+	{
+		meshes[i].Mesh::Draw(shader, camera,
+			vec3(1.0f, 1.0f, 1.0f),
+			matricesMeshes[i],
+			translation,
+			rotation,
+			vec3(scale));
+	}
+}
+
 
 std::vector<Vertex> Model::assembleVertices(std::vector<glm::vec3> positions, std::vector<glm::vec3> normals, std::vector<glm::vec2> texUVs)
 {

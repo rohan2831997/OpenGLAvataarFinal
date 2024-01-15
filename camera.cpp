@@ -75,7 +75,9 @@ void Camera::Inputs(GLFWwindow* window, vector<vector<mat4>>& sphereModel3, vect
 		glfwGetCursorPos(window, &mouseX, &mouseY);
 
 		// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
-		// and then "transforms" them into degrees 
+		// and then "transforms" them into degrees
+		// rotX means rotation about x-axis
+		// rotY means rotation about y-axis
 		float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
 		float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
 
@@ -124,7 +126,6 @@ void Camera::detectSpheres(GLFWwindow* window, vector<vector<mat4>> sphereModel3
 
 	nearLoc = unProject(vec3(mouseX, viewport[3] - mouseY, 0.0f), view, proj, Viewport);
 	farLoc = unProject(vec3(mouseX, viewport[3] - mouseY, 1.0f), view, proj, Viewport);
-
 
 	//Ray walking code
 	float tx, ty, tz;

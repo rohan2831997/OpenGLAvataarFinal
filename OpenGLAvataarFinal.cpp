@@ -252,12 +252,21 @@ int main()
 	// Load in a model
 	Model model((parentDir + modelPath).c_str());
 
+	//Load the house
+	std::string housemodelPath = "/OpenGLTuts/models/house2/scene.gltf";
+	Model house((parentDir + housemodelPath).c_str());
+
 	//Specify the background collour
 	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 	// Clean the back buffer and assign the new colour to it
 	glClear(GL_COLOR_BUFFER_BIT);
 	//swap the back buffer witht he front buffer
 	glfwSwapBuffers(window);
+
+	//Enable Face Culling
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
 
 	//enable depth filter
 	glEnable(GL_DEPTH_TEST);
@@ -271,10 +280,27 @@ int main()
 
 	float x = 0.0f;
 
+	//enable FPS Counter
+	int counter = 0;
+	double curTime = 0.0;
+	double buffer = 1;
+	double prevTime = 0.0;
+
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
-		
+		//FPS Counter
+		counter++;
+		curTime = glfwGetTime();
+		if (curTime - prevTime > buffer)
+		{
+			prevTime = curTime;
+			double fps = counter / buffer;
+			string title = "OpenGL Project(FPS - " + to_string(fps) + ")";
+			glfwSetWindowTitle(window, title.c_str());
+			counter = 0;
+		}
+
 		
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		// Clean the back buffer and assign the new colour to it
@@ -304,8 +330,10 @@ int main()
 		glUniform3f(glGetUniformLocation(shaderProgram.ID, "colorMod"), 1.0f, 1.0f, 1.0f);
 
 
+
+
 		//enable copying values to the stencil buffer
-		glStencilFunc(GL_ALWAYS, 1, 0XFF);
+		glStencilFunc(GL_ALWAYS, 2, 0XFF);
 		glStencilMask(0xFF);
 		
 
@@ -315,7 +343,7 @@ int main()
 
 		//Now stencil buffers are well written
 		// Disable writting into them
-		glStencilFunc(GL_NOTEQUAL, 1, 0XFF);
+		glStencilFunc(GL_NOTEQUAL, 2, 0XFF);
 		glStencilMask(0x00);
 		glDisable(GL_DEPTH_TEST);
 
@@ -323,10 +351,26 @@ int main()
 		outlineShaders.Activate();
 		model.scaleDraw(outlineShaders, cam, abs(0.1f * sin(0.0003f * x)));
 
-		//Enable depth testing again
+		// Enable modifying of the stencil buffer
 		glStencilMask(0xFF);
+		// Clear stencil buffer
 		glStencilFunc(GL_ALWAYS, 0, 0xFF);
-		glDisable(GL_DEPTH_TEST);
+		// Enable the depth buffer
+		glEnable(GL_DEPTH_TEST);
+
+		//Draw the house Object
+		vec3 RotationAxis(1.0f, 0.0f, 0.0f);
+		float RotationAngle = 3.14f;
+		float x = RotationAxis.x * sin(RotationAngle / 2);
+		float y = RotationAxis.y * sin(RotationAngle / 2);
+		float z = RotationAxis.z * sin(RotationAngle / 2);
+		float w = cos(RotationAngle / 2);
+
+		house.DrawSRT(shaderProgram, cam, 
+			1.0f, 
+			quat(w, x, y, z), 
+			vec3(0.0f, 2.0f, 4.0f));
+
 
 		//Draw Light Object
 		light.DrawLight(lightShader, cam, lightModel);

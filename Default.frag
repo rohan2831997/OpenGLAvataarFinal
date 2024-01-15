@@ -26,7 +26,7 @@ vec4 pointLighting()
    float b=0.7;
    float eq = 5.0f/(a*dist*dist+b*dist+1.0f);
 
-   float ambient = 0.0f;
+   float ambient = 0.5f;
 
    vec3 normal = normalize(Normal);
    vec3 lightDirection = normalize(lightvec);

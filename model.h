@@ -14,6 +14,8 @@ public:
 
 	void scaleDraw(Shader& shader, Camera& camera, GLfloat scale);
 
+	void DrawSRT(Shader& shader, Camera& camera, GLfloat scale, glm::quat rotation, glm::vec3 translation);
+
 private:
 	const char* file;
 	std::vector<unsigned char> data;
